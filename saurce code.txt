@@ -1,0 +1,62 @@
+========== api.php ==========
+ 
+<?php
+header('Content-Type: application/json');
+ 
+include 'auth.php';
+ 
+$output = array();
+$sql = "SELECT * FROM users";
+$result = $conn->query($sql);
+ 
+if ($result->num_rows > 0) {
+    while($row = $result->fetch_assoc()) {
+        $output[] = $row;
+    }
+} else {
+    $output['error'] = true;
+    $output['message'] = "No data found";
+}
+ 
+echo json_encode($output);
+$conn->close();
+ 
+?>
+ 
+========== auth.php ==========
+ 
+<?php
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "myapi";
+ 
+$conn = new 
+    mysqli($servername, $username, $password, $dbname);
+ 
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+ 
+?>
+ 
+========== phpmyadmin sql ==========
+ 
+-- Membuat database
+CREATE DATABASE myapi;
+ 
+-- Menggunakan database yang baru dibuat
+USE myapi;
+ 
+-- Membuat tabel users
+CREATE TABLE users (
+    userid INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(255) NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    api_key VARCHAR(255) NOT NULL
+);
+ 
+-- Memasukkan data sembarang ke dalam tabel users
+INSERT INTO users (username, password, api_key) VALUES ('user1', 'pass1', 'key1');
+INSERT INTO users (username, password, api_key) VALUES ('user2', 'pass2', 'key2');
+INSERT INTO users (username, password, api_key) VALUES ('user3', 'pass3', 'key3');
